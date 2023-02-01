@@ -32,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
         children: [
           Image.asset(AppConstants.splashScreenImagePath,),
           const SizedBox(height: AppConstants.splashScreenTextSize,),
-          Text(AppConstants.splashScreenTitle ,style: appTheme.textTheme.headline1,),
+          Text(AppConstants.splashScreenTitle ,style: appTheme.textTheme.headlineMedium,),
         ],
       )),
     );

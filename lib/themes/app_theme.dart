@@ -19,6 +19,7 @@ ThemeData appTheme = ThemeData(
   ),
 
   textTheme:  TextTheme(
+
     headlineLarge: const TextStyle(
         fontSize: AppConstants.appBarTitleTextSize,
         fontWeight: FontWeight.w400,
@@ -34,17 +35,28 @@ ThemeData appTheme = ThemeData(
       color: Colors.black
     ),
 
+    headlineMedium: const TextStyle(
+    fontSize: AppConstants.splashScreenTextSize,
+    fontWeight: FontWeight.w400,
+    color: AppConstants.splashScreenTextPrimaryColor,
+    shadows: [
+      Shadow(
+        color: AppConstants.splashScreenTextShadowColor,
+        offset: Offset(-3, 2),
+      ),
+    ]),
 
-    headline1: const TextStyle(
-        fontSize: AppConstants.splashScreenTextSize,
-        fontWeight: FontWeight.w400,
-        color: AppConstants.splashScreenTextPrimaryColor,
-        shadows: [
-          Shadow(
-            color: AppConstants.splashScreenTextShadowColor,
-            offset: Offset(-3, 2),
-          ),
-        ]),
+
+    // headline1: const TextStyle(
+    //     fontSize: AppConstants.splashScreenTextSize,
+    //     fontWeight: FontWeight.w400,
+    //     color: AppConstants.splashScreenTextPrimaryColor,
+    //     shadows: [
+    //       Shadow(
+    //         color: AppConstants.splashScreenTextShadowColor,
+    //         offset: Offset(-3, 2),
+    //       ),
+    //     ]),
 
 /*    subtitle1: TextStyle(
         fontSize: AppConstants.splashScreenTextSize,

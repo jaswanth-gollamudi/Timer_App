@@ -69,7 +69,8 @@ class _DashboardState extends State<Dashboard> {
             const SizedBox(
               width: 70,
             ),
-            const Text(AppConstants.noTimerPresentText),
+            // const Text(AppConstants.noTimerPresentText),
+             Text(AppConstants.noTimerPresentText,style: appTheme.textTheme.bodySmall,),
             Image.asset(
               AppConstants.noTimerPresentArrowPath,
             ),

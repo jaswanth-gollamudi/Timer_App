@@ -1,23 +1,19 @@
 import 'dart:async';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:timer_app/themes/app_theme.dart';
-
 import '../database/database.dart';
 import 'count_down_timer_widget.dart';
-import 'package:drift/drift.dart' as dr;
-
 import '../database/utils/data.dart';
 
 class TaskListWidgetOnDashboard extends StatefulWidget {
   List<AllTask> taskToBeShow;
 
-  TaskListWidgetOnDashboard(
-      {Key? key,
-      required this.taskToBeShow,})
-      : super(key: key);
+  TaskListWidgetOnDashboard({
+    Key? key,
+    required this.taskToBeShow,
+  }) : super(key: key);
 
   @override
   _TaskListWidgetOnDashboardState createState() =>
@@ -26,16 +22,13 @@ class TaskListWidgetOnDashboard extends StatefulWidget {
 
 class _TaskListWidgetOnDashboardState extends State<TaskListWidgetOnDashboard>
     with TickerProviderStateMixin {
-  //late AppDataBase appDataBase;
-
-  //late AnimationController _controller;
   int levelClock = 0;
   bool firstTime = false;
 
-  // bool isPaused = false;
-
   final Map<int, AnimationController> _animationControllers = {};
   final Map<int, String> currValuesForTasks = {};
+
+  AudioPlayer audioPlayer = AudioPlayer();
 
   @override
   void initState() {
@@ -93,9 +86,6 @@ class _TaskListWidgetOnDashboardState extends State<TaskListWidgetOnDashboard>
           ),
           buildTextWidget(
               title: task.title, color: const Color(0xff216C2E), size: 22),
-          const SizedBox(
-            height: 2,
-          ),
           buildTextWidget(
               title: task.description,
               color: const Color(0xff006782),
@@ -110,7 +100,7 @@ class _TaskListWidgetOnDashboardState extends State<TaskListWidgetOnDashboard>
   Widget buildTextWidget(
       {required String title, required Color color, required double size}) {
     return Padding(
-      padding: const EdgeInsets.only(left: 32),
+      padding: const EdgeInsets.only(left: 32, bottom: 2),
       child: Text(
         title,
         style: appTheme.textTheme.headlineLarge?.copyWith(
@@ -120,7 +110,6 @@ class _TaskListWidgetOnDashboardState extends State<TaskListWidgetOnDashboard>
   }
 
   Widget countDownWidget(int index, AllTask task) {
-    print("taskTime");
     int levelClock = convertTimeToSeconds(
         time: task.currentTime.isNotEmpty ? task.currentTime : task.time);
     if (_animationControllers[index] == null) {
@@ -135,7 +124,6 @@ class _TaskListWidgetOnDashboardState extends State<TaskListWidgetOnDashboard>
       _animationControllers[index]
           ?.forward(from: _animationControllers[index]?.value);
     }
-    //_animationControllers[index]?.forward();
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
@@ -144,7 +132,6 @@ class _TaskListWidgetOnDashboardState extends State<TaskListWidgetOnDashboard>
           task: task,
           informTimerIsDone: (value) {
             currValuesForTasks[index] = value;
-            print("currValuesForTasks" + currValuesForTasks.toString());
             if (currValuesForTasks[index] == "00:00:00") {
               updateTaskCompletedInDb(indexTobeUpdated: index);
             }
@@ -160,7 +147,7 @@ class _TaskListWidgetOnDashboardState extends State<TaskListWidgetOnDashboard>
         task.isTaskPaused
             ? GestureDetector(
                 onTap: () {
-                  _animationControllers[index]?.forward();
+                  //_animationControllers[index]?.forward();
                   updatePlayAndPauseInDb(
                       indexTobeUpdated: index, isPlayOrPause: "play");
                 },
@@ -227,18 +214,25 @@ class _TaskListWidgetOnDashboardState extends State<TaskListWidgetOnDashboard>
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30),
             color: const Color(0xffE1DFFF)),
-        child: const Center(
+        child: Center(
             child: Text(
           "MARK COMPLETE",
+          style: appTheme.textTheme.bodySmall?.copyWith(
+            fontWeight: FontWeight.w500,
+          ),
         )),
       ),
     );
   }
 
+  //Actions based on user interaction
+  //TO-DO can be refactored.
+
   void _deleteTaskFromDb({required int indexTobeDeleted}) {
     final taskData = Provider.of<TaskData>(context, listen: false);
     taskData.deleteTask(widget.taskToBeShow[indexTobeDeleted]).then((value) {
       taskData.fetchTasks();
+      audioPlayer.stop();
     });
   }
 
@@ -249,14 +243,13 @@ class _TaskListWidgetOnDashboardState extends State<TaskListWidgetOnDashboard>
       id: widget.taskToBeShow[indexTobeUpdated].id,
       title: widget.taskToBeShow[indexTobeUpdated].title,
       description: widget.taskToBeShow[indexTobeUpdated].description,
-      time: currValuesForTasks[indexTobeUpdated]!,
+      time: "",
       isTaskCompleted: false,
       isTaskPaused: isPlayOrPause == "pause" ? true : false,
       currentTime: currValuesForTasks[indexTobeUpdated]!,
     );
     taskData.updateTask(task).then((value) {
       taskData.fetchTasks();
-      // print("taskData" + taskData.toString());
     });
   }
 
@@ -276,19 +269,17 @@ class _TaskListWidgetOnDashboardState extends State<TaskListWidgetOnDashboard>
     taskData.updateTask(task).then((value) {
       taskData.fetchTasks();
       playReminderSong();
-      // print("taskData" + taskData.toString());
     });
   }
 
-  playReminderSong(){
-
-    AudioPlayer audioPlayer = AudioPlayer();
-
-    // Play the audio file
-    audioPlayer.play(AssetSource("sounds/keep_up.mp3",)).then((value) {
+  playReminderSong() {
+    audioPlayer
+        .play(AssetSource(
+      "sounds/keep_up.mp3",
+    ))
+        .then((value) {
       // Wait for 3 seconds
       Future.delayed(Duration(seconds: 20)).then((value) {
-        // Stop the audio after 3 seconds
         audioPlayer.stop();
       });
     });
@@ -302,74 +293,4 @@ class _TaskListWidgetOnDashboardState extends State<TaskListWidgetOnDashboard>
     int seconds = duration.inSeconds;
     return seconds;
   }
-
-// void updatePlayPauseActionsInDb({
-//   required int indexTobeUpdated,
-//   required String playOrPause,
-//   required String currentValue,
-// }) {
-//   appDataBase
-//       .updateTask(AllTask(
-//           id: widget.taskToBeShow[indexTobeUpdated].id,
-//           title: widget.taskToBeShow[indexTobeUpdated].title,
-//           description: widget.taskToBeShow[indexTobeUpdated].description,
-//           time: currentValue,
-//           isTaskCompleted: false,
-//           isTaskPaused: playOrPause == "pause" ? true : false))
-//       .then((value) {
-//     widget.updateListBasedOnAction(true);
-//   });
-// }
-
-// void updateCompletedTasksInDb({
-//   required int indexTobeUpdated,
-//   /*required String currTime*/
-// }) {
-//   appDataBase
-//       .updateTask(AllTask(
-//     id: widget.taskToBeShow[indexTobeUpdated].id,
-//     title: widget.taskToBeShow[indexTobeUpdated].title,
-//     description: widget.taskToBeShow[indexTobeUpdated].description,
-//     time: "00:00:00",
-//     isTaskCompleted: true,
-//     isTaskPaused: false,
-//   ))
-//       .then((value) {
-//     widget.updateListBasedOnAction(true);
-//     print("hereIsrnot");
-//
-//   });
-// }
-
-// void updateRealDataInDb(
-//     {required int indexTobeUpdated, required String currTime}) {
-//   final taskData = Provider.of<TaskData>(context, listen: false);
-//   taskData.updateTask(AllTask(
-//     id: widget.taskToBeShow[indexTobeUpdated].id,
-//     title: widget.taskToBeShow[indexTobeUpdated].title,
-//     description: widget.taskToBeShow[indexTobeUpdated].description,
-//     time: currTime,
-//     c
-//     isTaskCompleted: false,
-//     isTaskPaused: false,
-//   ));
-//   // appDataBase
-//   //     .updateTask(
-//   //     AllTask(
-//   //   id: widget.taskToBeShow[indexTobeUpdated].id,
-//   //   title: widget.taskToBeShow[indexTobeUpdated].title,
-//   //   description: widget.taskToBeShow[indexTobeUpdated].description,
-//   //   time: currTime,
-//   //   isTaskCompleted: currTime =="00:00:00"? true : false,
-//   //   isTaskPaused: false,
-//   // )
-//   // )
-//   //     .then((value) {
-//   //       if(currTime=="00:00:00"){
-//   //         widget.updateListBasedOnAction(true);
-//   //       }
-//   // });
-// }
-
-
 }

@@ -90,9 +90,12 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                     ),
                   ),
                 ),
-                const Padding(
+                Padding(
                   padding: EdgeInsets.only(top: 28, bottom: 10),
-                  child: Text("Duration"),
+                  child: Text(
+                    "Duration",
+                    style: appTheme.textTheme.bodySmall,
+                  ),
                 ),
                 Row(
                   children: [
@@ -151,10 +154,7 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                   LengthLimitingTextInputFormatter(2),
                 ],
                 controller: controller,
-                style: appTheme.textTheme.headlineLarge?.copyWith(
-                  color: AppConstants.addTaskTitleColor,
-                  fontSize: 12,
-                ),
+                style: appTheme.textTheme.bodySmall,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                 ),
@@ -169,7 +169,10 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
         ),
         Padding(
           padding: const EdgeInsets.only(right: 20, top: 5),
-          child: Text(title),
+          child: Text(
+            title,
+            style: appTheme.textTheme.bodySmall,
+          ),
         ),
       ],
     );
@@ -177,6 +180,13 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
 
   void _saveToDb() {
     final taskData = Provider.of<TaskData>(context, listen: false);
+    if(hoursController.text.isEmpty){
+      hoursController.text ="00";
+    } else if(minutesController.text.isEmpty){
+      minutesController.text ="00";
+    }else if(secondsController.text.isEmpty){
+      secondsController.text = "00";
+    }
     taskData
         .addTask(AllTasksCompanion(
             title: dr.Value(titleController.text),
