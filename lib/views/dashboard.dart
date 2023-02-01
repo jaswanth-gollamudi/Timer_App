@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:timer_app/database/database.dart';
 import 'package:timer_app/themes/app_theme.dart';
+import 'package:timer_app/themes/constants.dart';
 import 'package:timer_app/views/task_list_widget.dart';
 import 'add_task_dialog.dart';
-import 'data.dart';
+import '../database/utils/data.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -12,8 +13,6 @@ class Dashboard extends StatefulWidget {
   @override
   State<Dashboard> createState() => _DashboardState();
 }
-
-
 
 class _DashboardState extends State<Dashboard> {
   late AppDataBase appDataBase;
@@ -26,9 +25,9 @@ class _DashboardState extends State<Dashboard> {
     //
     context.read<TaskData>().fetchTasks();
   }
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         appBar: appBar(),
         resizeToAvoidBottomInset: false,
@@ -46,7 +45,7 @@ class _DashboardState extends State<Dashboard> {
             ),
           ),
         ),
-        body:   Consumer<TaskData>(
+        body: Consumer<TaskData>(
           builder: (context, taskData, child) {
             final tasks = taskData.tasks;
             if (tasks.isEmpty) {
@@ -54,52 +53,9 @@ class _DashboardState extends State<Dashboard> {
             }
             return TaskListWidgetOnDashboard(
               taskToBeShow: tasks,
-              updateListBasedOnAction: (value) async {
-                if (value) {
-                  //context.read<TaskData>().fetchTasks();
-                }
-              },
             );
           },
         ));
-
-       /* FutureBuilder<List<AllTask>>(
-            future: getTasksFromDataBase(),
-            builder: (context, snapshot) {
-              print("trrrrrrrrrrrrrrrrr");
-              if (snapshot.hasData) {
-                List<AllTask>? taskList = snapshot.data;
-                if (taskList != null) {
-                  if (taskList.isEmpty) {
-                    return noTimerActiveWidget();
-                  } else {
-                    // Main widget go here
-                    print(taskList.toString()+"tyrtyrtrytr");
-                    return TaskListWidgetOnDashboard(
-                      taskToBeShow: taskList,
-                      updateListBasedOnAction: (value) async {
-                        if (value) {
-                           // getTasksFromDataBase();
-                           setState(() {});
-                           print(taskList.toString()+"setState");
-
-                        }
-                      },
-                    );
-                  }
-                }
-                return const Center(
-                    child: Center(
-                  child: Text(
-                      "Something is wrong from our side, Please try again"),
-                ));
-              } else if (snapshot.hasError) {
-                return Center(child: Text("${snapshot.error}"));
-              } else {
-                return Container();
-              }
-            })*/
-
   }
 
   Widget noTimerActiveWidget() {
@@ -113,9 +69,9 @@ class _DashboardState extends State<Dashboard> {
             const SizedBox(
               width: 70,
             ),
-            const Text(" No timer Active. \n Press here to start a new one."),
+            const Text(AppConstants.noTimerPresentText),
             Image.asset(
-              "assets/images/ic_down_arrow.png",
+              AppConstants.noTimerPresentArrowPath,
             ),
             const SizedBox(),
           ],
@@ -133,7 +89,7 @@ class _DashboardState extends State<Dashboard> {
           padding:
               const EdgeInsets.only(left: 31, bottom: 12, right: 174, top: 72),
           child: Text(
-            "Potato Timer",
+            AppConstants.appBarTitle,
             style: appTheme.textTheme.headlineLarge,
           ),
         ),
@@ -153,13 +109,9 @@ class _DashboardState extends State<Dashboard> {
           Animation<double> secondaryAnimation,
         ) {
           return AddTaskDialog();
-        })
-    .then((value) {
+        }).then((value) {
       final taskData = Provider.of<TaskData>(context, listen: false);
       taskData.fetchTasks();
-    }
-   );
+    });
   }
-
-
 }

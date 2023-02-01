@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:timer_app/themes/app_theme.dart';
@@ -6,16 +9,14 @@ import '../database/database.dart';
 import 'count_down_timer_widget.dart';
 import 'package:drift/drift.dart' as dr;
 
-import 'data.dart';
+import '../database/utils/data.dart';
 
 class TaskListWidgetOnDashboard extends StatefulWidget {
   List<AllTask> taskToBeShow;
-  final Function(bool) updateListBasedOnAction;
 
   TaskListWidgetOnDashboard(
       {Key? key,
-      required this.taskToBeShow,
-      required this.updateListBasedOnAction})
+      required this.taskToBeShow,})
       : super(key: key);
 
   @override
@@ -274,7 +275,22 @@ class _TaskListWidgetOnDashboardState extends State<TaskListWidgetOnDashboard>
     );
     taskData.updateTask(task).then((value) {
       taskData.fetchTasks();
+      playReminderSong();
       // print("taskData" + taskData.toString());
+    });
+  }
+
+  playReminderSong(){
+
+    AudioPlayer audioPlayer = AudioPlayer();
+
+    // Play the audio file
+    audioPlayer.play(AssetSource("sounds/keep_up.mp3",)).then((value) {
+      // Wait for 3 seconds
+      Future.delayed(Duration(seconds: 20)).then((value) {
+        // Stop the audio after 3 seconds
+        audioPlayer.stop();
+      });
     });
   }
 

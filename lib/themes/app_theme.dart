@@ -18,14 +18,24 @@ ThemeData appTheme = ThemeData(
     brightness: Brightness.light,
   ),
 
-  textTheme: const TextTheme(
-    headlineLarge: TextStyle(
+  textTheme:  TextTheme(
+    headlineLarge: const TextStyle(
         fontSize: AppConstants.appBarTitleTextSize,
         fontWeight: FontWeight.w400,
         color: Colors.white),
 
+    bodyMedium: const TextStyle(
+        fontSize: AppConstants.appBarTitleTextSize,
+        //fontWeight: FontWeight.w400,
+        color: Color(0xff006782)),
 
-    headline1: TextStyle(
+    bodySmall: const TextStyle(
+      fontSize: AppConstants.bodySmall,
+      color: Colors.black
+    ),
+
+
+    headline1: const TextStyle(
         fontSize: AppConstants.splashScreenTextSize,
         fontWeight: FontWeight.w400,
         color: AppConstants.splashScreenTextPrimaryColor,

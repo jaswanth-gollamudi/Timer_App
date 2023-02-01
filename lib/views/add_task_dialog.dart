@@ -6,7 +6,7 @@ import 'package:timer_app/database/database.dart';
 import 'package:timer_app/themes/app_theme.dart';
 import 'package:timer_app/themes/constants.dart';
 
-import 'data.dart';
+import '../database/utils/data.dart';
 
 class AddTaskDialog extends StatefulWidget {
   AddTaskDialog({Key? key}) : super(key: key);
@@ -16,40 +16,32 @@ class AddTaskDialog extends StatefulWidget {
 }
 
 class _AddTaskDialogState extends State<AddTaskDialog> {
-
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController hoursController = TextEditingController(text: "00");
-
   TextEditingController minutesController = TextEditingController(text: "00");
-
   TextEditingController secondsController = TextEditingController(text: "00");
-
-  //late AppDataBase appDataBase;
-
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
   }
 
   @override
   Widget build(BuildContext context) {
-   // appDataBase = Provider.of<AppDataBase>(context);
     return Center(
       child: Container(
         clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: const Color(0xFFE7F0F4),
+          color: AppConstants.addTaskDialogBgColor,
         ),
         height: MediaQuery.of(context).size.height - 200,
         width: MediaQuery.of(context).size.width - 70,
         child: Scaffold(
           resizeToAvoidBottomInset: false,
-          backgroundColor: const Color(0xFFE7F0F4),
+          backgroundColor: AppConstants.addTaskDialogBgColor,
           body: SingleChildScrollView(
             padding: const EdgeInsets.only(left: 32),
             reverse: true,
@@ -61,17 +53,17 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                   padding: const EdgeInsets.only(
                     top: 48,
                   ),
-                  child: Text("Add Task",
+                  child: Text(AppConstants.addTaskHeaderTitle,
                       style: appTheme.textTheme.headlineLarge?.copyWith(
                         color: AppConstants.addTaskTitleColor,
                         decoration: TextDecoration.none,
                       )),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
-                 Padding(
-                  padding: const EdgeInsets.only(right: 64),
+                // const SizedBox(
+                //   height: 20,
+                // ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 64, top: 20),
                   child: TextField(
                     controller: titleController,
                     textDirection: TextDirection.ltr,
@@ -81,11 +73,11 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 36,
-                ),
-                 Padding(
-                  padding: const EdgeInsets.only(right: 64),
+                // const SizedBox(
+                //   height: 36,
+                // ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 64, top: 36),
                   child: TextField(
                     controller: descriptionController,
                     textDirection: TextDirection.ltr,
@@ -98,14 +90,10 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 28,
+                const Padding(
+                  padding: EdgeInsets.only(top: 28, bottom: 10),
+                  child: Text("Duration"),
                 ),
-                const Text("Duration"),
-                const SizedBox(
-                  height: 10,
-                ),
-
                 Row(
                   children: [
                     timePickerWidget(title: "HH", controller: hoursController),
@@ -117,7 +105,6 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                         controller: secondsController),
                   ],
                 ),
-
                 Padding(
                     padding: EdgeInsets.only(
                         bottom: MediaQuery.of(context).viewInsets.bottom)),
@@ -125,22 +112,19 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
             ),
           ),
           bottomNavigationBar: GestureDetector(
-            onTap: (){
+            onTap: () {
               _saveToDb();
             },
             child: Container(
               // alignment: Alignment.bottomCenter,
-              color: const Color(0xffE1DFFF),
+              color: AppConstants.addTaskButtonColor,
               padding: EdgeInsets.zero,
               height: 61,
               width: MediaQuery.of(context).size.width,
               child: Center(
                   child: Text(
-                "Add Task",
-                style: appTheme.textTheme.headlineLarge?.copyWith(
-                  color: Colors.black,
-                  fontSize: 14,
-                ),
+                AppConstants.addTaskHeaderTitle,
+                style: appTheme.textTheme.bodySmall,
               )),
             ),
           ),
@@ -183,34 +167,27 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
               ),
           ],
         ),
-        const SizedBox(
-          height: 5,
-        ),
         Padding(
-          padding: const EdgeInsets.only(right: 20),
+          padding: const EdgeInsets.only(right: 20, top: 5),
           child: Text(title),
         ),
       ],
     );
   }
 
-
-
-
-
   void _saveToDb() {
-
     final taskData = Provider.of<TaskData>(context, listen: false);
-    taskData.addTask(
-        AllTasksCompanion(
+    taskData
+        .addTask(AllTasksCompanion(
             title: dr.Value(titleController.text),
             description: dr.Value(descriptionController.text),
             isTaskCompleted: const dr.Value(false),
-            isTaskPaused:const dr.Value(false),
+            isTaskPaused: const dr.Value(false),
             currentTime: dr.Value(""),
-            time: dr.Value("${hoursController.text}:${minutesController.text}:${secondsController.text}")
-        )
-    ).then((value) {
+            time: dr.Value("${hoursController.text}:"
+                "${minutesController.text}:"
+                "${secondsController.text}")))
+        .then((value) {
       Navigator.pop(context, true);
     });
   }

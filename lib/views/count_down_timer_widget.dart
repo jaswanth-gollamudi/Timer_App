@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 import '../database/database.dart';
+import '../themes/app_theme.dart';
 
 class Countdown extends AnimatedWidget {
   Animation<int> animation;
@@ -19,18 +18,15 @@ class Countdown extends AnimatedWidget {
 
   @override
   build(BuildContext context) {
-    //appDataBase = Provider.of<AppDataBase>(context);
-
     Duration clockTimer = Duration(seconds: animation.value);
     String timerText =
-        '${clockTimer.inHours.remainder(60).toString().padLeft(2, '0')}:${clockTimer.inMinutes.remainder(60).toString().padLeft(2, '0')}:${clockTimer.inSeconds.remainder(60).toString().padLeft(2, '0')}';
-      informTimerIsDone(timerText);
+        '${clockTimer.inHours.remainder(60).toString().padLeft(2, '0')}:'
+        '${clockTimer.inMinutes.remainder(60).toString().padLeft(2, '0')}:'
+        '${clockTimer.inSeconds.remainder(60).toString().padLeft(2, '0')}';
+    informTimerIsDone(timerText);
     return Text(
       timerText,
-      style: const TextStyle(
-        fontSize: 32,
-        color: Color(0xff006782),
-      ),
-    );
+      style: appTheme.textTheme.bodyMedium,
+      );
   }
 }
