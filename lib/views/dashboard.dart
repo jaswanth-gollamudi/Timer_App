@@ -5,7 +5,7 @@ import 'package:timer_app/themes/app_theme.dart';
 import 'package:timer_app/themes/constants.dart';
 import 'package:timer_app/views/task_list_widget.dart';
 import 'add_task_dialog.dart';
-import '../database/utils/data.dart';
+import '../database/utils/data_provider.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);

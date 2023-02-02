@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:timer_app/themes/app_theme.dart';
 import '../database/database.dart';
 import 'count_down_timer_widget.dart';
-import '../database/utils/data.dart';
+import '../database/utils/data_provider.dart';
 
 class TaskListWidgetOnDashboard extends StatefulWidget {
   List<AllTask> taskToBeShow;

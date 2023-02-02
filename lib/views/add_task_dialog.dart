@@ -6,7 +6,7 @@ import 'package:timer_app/database/database.dart';
 import 'package:timer_app/themes/app_theme.dart';
 import 'package:timer_app/themes/constants.dart';
 
-import '../database/utils/data.dart';
+import '../database/utils/data_provider.dart';
 
 class AddTaskDialog extends StatefulWidget {
   AddTaskDialog({Key? key}) : super(key: key);
