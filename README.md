@@ -14,9 +14,10 @@ Implemented :-
 
 Additional things :
 -----------------------------------------------------------------------------------------
-1)when you kill and restarts app - timer should continue where it is left.
-2)when you kill and restarts app - timer play pause state is saved as it is earlier
-3)when you add, delete, play, pause the tasks should be independent to other task timer.
+
+1. when you kill and restarts app - timer should continue where it is left.
+2. when you kill and restarts app - timer play pause state is saved as it is earlier
+3. when you add, delete, play, pause the tasks should be independent to other task timer.
 
 
 Packages Used :
