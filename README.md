@@ -29,6 +29,7 @@ Packages Used :
 Know isssues:-
 ------------------------------------------------------------------------------------------
 1) when you play/pause frequenlty the timer may vary in 2 seconds
+2) havent tested for complete responsievness.
 
 
 
