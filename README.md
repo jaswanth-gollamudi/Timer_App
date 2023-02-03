@@ -28,7 +28,7 @@ Packages Used :
 
 Know isssues:-
 ------------------------------------------------------------------------------------------
-1) when you play/pause frequnelty the timer may vary in 2 seconds
+1) when you play/pause frequenlty the timer may vary in 2 seconds
 
 
 
