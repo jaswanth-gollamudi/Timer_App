@@ -5,6 +5,8 @@ import 'package:timer_app/themes/app_theme.dart';
 import 'package:timer_app/database/utils/data_provider.dart';
 import 'routes/routes.dart' as route;
 
+
+
 void main() {
   runApp(const TimerApp());
 }
